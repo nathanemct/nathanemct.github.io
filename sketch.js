@@ -147,7 +147,8 @@ var crosshairWorldY;
 //creating the square grid
 var numRows = 5;
 var numColumns = 5;
-var squareSize = 400;
+var squareSize;
+
 
 //crosshair direction vars
 var isLeft;
@@ -190,7 +191,7 @@ var windowWidthMargin;
 
 //for the 'about' section in top right
 var url = 'https://github.com/nathanemct/nathanemct.github.io/blob/main/README.md';
-var urlX, urlY, urlWidth = 200, urlHeight = 30;
+var urlX, urlY, urlWidth = 100, urlHeight = 20;
 
 //map for the notes
 var noteMap = {
@@ -220,12 +221,21 @@ function preload() {
 
 function setup() {
   //creating the full page canvas, with some taken off so scroll bars don't appear 
-  windowWidthMargin = windowWidth - 2;
-  windowHeightMargin = windowHeight - 10;
-  offsetX = (windowWidthMargin - windowWidth) / 2;
-  offsetY = (windowHeightMargin - windowHeight) / 2;
+  windowWidthMargin = windowWidth;
+  windowHeightMargin = windowHeight;
 
-  createCanvas(windowWidthMargin, windowHeightMargin);
+  //no longer in use as using relative width/height
+  // offsetX = (windowWidthMargin - windowWidth) / 2;
+  // offsetY = (windowHeightMargin - windowHeight) / 2;
+
+  //so no scroll bars appear in full screen
+  noScrollBars();
+
+  //creating the cavas full page
+  createCanvas(windowWidth, windowHeight);
+
+  //setting the square size relatively
+  squareSize = windowWidthMargin / 5;
 
   //setting the position of the URL in the about section
   urlX = 10;
@@ -243,9 +253,9 @@ function setup() {
 
   //setting the boundaries for the crosshair, so it won't move out of 5x5 grid
   minX = offsetX + squareSize / 2 + (squareSize * 0.04);
-  maxX = offsetX + (numColumns * squareSize)  + (squareSize / 2) - (squareSize * 0.04)- 2;
+  maxX = offsetX + (numColumns * squareSize)  + (squareSize / 2) - (squareSize * 0.04);
   minY = offsetY + squareSize / 2 + (squareSize * 0.04);
-  maxY = offsetY + (numRows * squareSize) + (squareSize / 2) - (squareSize * 0.04) -10;
+  maxY = offsetY + (numRows * squareSize) + (squareSize / 2) - (squareSize * 0.04);
 }
 
 //FUNCTION TO PLAY A MIDI NOTE 
@@ -310,6 +320,8 @@ function setup() {
 function draw() {
   //background image, off set so no blurring at edges of screen
   image(backgroundImage, scrollPosX - 500, scrollPosY -500);
+
+  squareSize = windowWidthMargin / 5;
   
   //drawing the square grid and using push/pop 
   //to make it scroll against the crosshair movement
@@ -397,7 +409,7 @@ function draw() {
   }
   
   //setting instruction text arugments
-  textSize(24);
+  textSize(windowWidthMargin/70);
   textFont(myFont);
   textAlign(CENTER, TOP);
   fill(5, 5, 5, textOpacity);
@@ -415,7 +427,7 @@ function draw() {
   text("use alphabet keys to interact with data", (width/2 + 60) + xOffset, height/4 + 130 + yOffset2);
   
   //drawing the text in the top left to show data/auto play on/off
-  textSize(18);
+  textSize(14);
   textFont(myFont);
   fill(5, 5, 5, 250);
   textAlign(LEFT, TOP);
@@ -424,16 +436,16 @@ function draw() {
   text("about (click)", 10, 10)
 
   if(showText){
-    text("toggle data (z): " + "on", 10, 50);
+    text("toggle data (z): " + "on", 10, 40);
   }
   else if(!showText){
-    text("toggle data (z): " + "off", 10, 50);
+    text("toggle data (z): " + "off", 10, 40);
   }
   if(isOn){
-    text("auto play (space): " + "on", 10, 90);
+    text("auto play (space): " + "on", 10, 70);
   }
   else if(!isOn){
-    text("auto play (space): " + "off", 10, 90);
+    text("auto play (space): " + "off", 10, 70);
   }
 
   //just seeing which square crosshair is in for testing stage
@@ -451,33 +463,33 @@ function draw() {
   //logic to make the crosshair move/the background scroll
   if (isLeft && crosshairWorldX > minX) {
     if (crosshairX > width * 0.4) {
-      crosshairX -= 4;
+      crosshairX -= 3;
     } else {
-      scrollPosX += 4;
+      scrollPosX += 3;
     }
   }
 
   if (isRight && crosshairWorldX < maxX) {
     if (crosshairX < width * 0.6) {
-      crosshairX += 4;
+      crosshairX += 3;
     } else {
-      scrollPosX -= 4;
+      scrollPosX -= 3;
     }
   }
 
   if (isUp && crosshairWorldY > minY) {
     if (crosshairY > height * 0.5) {
-      crosshairY -= 4;
+      crosshairY -= 3;
     } else {
-      scrollPosY += 4;
+      scrollPosY += 3;
     }
   }
 
   if (isDown && crosshairWorldY < maxY) {
     if (crosshairY > height * 0.75) {
-      crosshairY += 4;
+      crosshairY += 3;
     } else {
-      scrollPosY -= 4;
+      scrollPosY -= 3;
     }
   }
 
@@ -542,7 +554,7 @@ function keyReleased() {
 function drawCrosshair() {
   fill(5, 5, 5, 200);
   noStroke();
-  ellipse(crosshairX, crosshairY, 20, 20);
+  ellipse(crosshairX, crosshairY, windowWidthMargin/100, windowWidthMargin/100);
   noStroke();
 }
 
@@ -606,7 +618,7 @@ function drawDataText(squareIndex) {
   const ssquareY = squareSize * row + squareSize / 2 + offsetY + scrollPosY;
   
   //setting the text properties
-  textSize(18);
+  textSize(windowWidthMargin/100);
   fill(5, 5, 5, 180);
   textFont(myFont);
   textAlign(CENTER, CENTER);
@@ -636,4 +648,20 @@ function startProgram() {
   isRight = false;
   isUp = false;
   isDown = false;
+}
+
+//not allowing scrollbars for full page
+function noScrollBars() {
+  const style = document.createElement('style');
+  style.innerHTML = `
+    body {
+      overflow: hidden;
+    }
+  `;
+  document.head.appendChild(style);
+}
+
+//allowing window to be resized
+function windowResized() {
+  resizeCanvas(windowWidth, windowHeight);
 }
