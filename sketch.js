@@ -189,7 +189,7 @@ var windowHeightMargin;
 var windowWidthMargin;
 
 //for the 'about' section in top right
-var url = 'https://github.com/nateemc/nateemc.github.io';
+var url = 'https://github.com/nathanemct/nathanemct.github.io/blob/main/README.md';
 var urlX, urlY, urlWidth = 200, urlHeight = 30;
 
 //map for the notes
